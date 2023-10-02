@@ -1,3 +1,4 @@
 # MSDS
 Data Science Assignments
-I formulated a liner programming problem with seven defined decision variables and constraints to meet nutritional requirements at the lowest cost.
+Homework Assignment #1 includes
+formulating a liner programming problem with seven defined decision variables and constraints to meet nutritional requirements at the lowest cost.
