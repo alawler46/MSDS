@@ -1,0 +1,209 @@
+
+
+    pip install pulp
+
+    Defaulting to user installation because normal site-packages is not writeable
+    Looking in links: /usr/share/pip-wheels
+    Requirement already satisfied: pulp in /home/daf03834-2cd7-40ad-bc31-d3b51e4b5c9f/.local/lib/python3.9/site-packages (2.7.0)
+    Note: you may need to restart the kernel to use updated packages.
+
+    import pulp
+
+    lp = pulp.LpProblem("MyDietResearch", pulp.LpMinimize)
+    #setting up lp problem
+
+    # My 5 food items described as variables and non negative
+    x1 = pulp.LpVariable(name="Lentil Soup", lowBound=0)  # Non-negative value
+    x2 = pulp.LpVariable(name="Egg White Bites", lowBound=0)  # Non-negative value
+    x3 = pulp.LpVariable(name="Salmon", lowBound=0)  # Non-negative value
+    x4 = pulp.LpVariable(name="Lettuce Wraps", lowBound=0)  # Non-negative value
+    x5 = pulp.LpVariable(name="Quinoa Salad", lowBound=0)  # Non-negative value
+
+    #objective function to be minimized because you want to find optimal cost
+    lp += 3.22 * x1 + 1.02 * x2 + 14.62 * x3 + 5.42 * x4 + 5.40 * x5
+
+    #constraints provided by FDA nutritional information
+    lp += 274.7 * x1 + 381 * x2 + 506 * x3 + 1225.9 * x4 + 1257 * x5 <=5000 #sodium
+    lp += 269 * x1 + 85 * x2 + 593 * x3 + 505 * x4 + 829 * x5 >=2000 #calories
+    lp += 15 * x1 + 9 * x2 + 35 * x3 + 22.8 * x4 + 28 * x5 >=50 #protein
+    lp += 0 * x1 + 0 * x2 + 16.9 * x3 + 0 * x4 + 0 * x5 >=20 #vitamin D
+    lp += 60 * x1 + 86 * x2 + 59.3 * x3 + 110 * x4 + 387 * x5 >=1300 #calcium
+    lp += 4.68 * x1 + 0.2 * x2 + 2.5 * x3 + 4.1 * x4 + 12 * x5 >=18 #iron
+    lp += 1269 * x1 + 116 * x2 + 648.6 * x3 + 799 * x4 + 2345 * x5 >=4700 #potassium
+
+    #solve the lp
+    solution = lp.solve()
+    print("Solution",solution)
+    #1: optimal, 2: not solved, 3:infeasible, 4:unbounded, 5:not defined
+          
+    for var in lp.variables():
+        print(var, "=", pulp.value(var))
+          
+    print("OPT =", pulp.value(lp.objective))
+
+    Welcome to the CBC MILP Solver 
+    Version: 2.10.3 
+    Build Date: Dec 15 2019 
+
+    command line - /home/daf03834-2cd7-40ad-bc31-d3b51e4b5c9f/.local/lib/python3.9/site-packages/pulp/solverdir/cbc/linux/64/cbc /tmp/6678a041c7d646c8be1d29d2c2740599-pulp.mps timeMode elapsed branch printingOptions all solution /tmp/6678a041c7d646c8be1d29d2c2740599-pulp.sol (default strategy 1)
+    At line 2 NAME          MODEL
+    At line 3 ROWS
+    At line 12 COLUMNS
+    At line 49 RHS
+    At line 57 BOUNDS
+    At line 58 ENDATA
+    Problem MODEL has 7 rows, 5 columns and 31 elements
+    Coin0008I MODEL read with 0 errors
+    Option for timeMode changed from cpu to elapsed
+    Presolve 6 (-1) rows, 5 (0) columns and 30 (-1) elements
+    0  Obj 17.301775 Primal inf 27.986528 (5)
+    3  Obj 33.74213
+    Optimal - objective value 33.74213
+    After Postsolve, objective 33.74213, infeasibilities - dual 0 (0), primal 0 (0)
+    Optimal objective 33.7421295 - 3 iterations time 0.002, Presolve 0.00
+    Option for printingOptions changed from normal to all
+    Total time (CPU seconds):       0.00   (Wallclock seconds):       0.01
+
+    Solution 1
+    Egg_White_Bites = 3.9997744
+    Lentil_Soup = 0.0
+    Lettuce_Wraps = 0.0
+    Quinoa_Salad = 2.2889971
+    Salmon = 1.183432
+    OPT = 33.742130068
+
+    #Adding 2 additional constraints
+    lp2 = pulp.LpProblem("MyDietResearch", pulp.LpMinimize)
+    #setting up lp problem
+
+    # My 5 food items described as variables and non negative
+    x1 = pulp.LpVariable(name="Lentil Soup", lowBound=0)  # Non-negative value
+    x2 = pulp.LpVariable(name="Egg White Bites", lowBound=0)  # Non-negative value
+    x3 = pulp.LpVariable(name="Salmon", lowBound=0)  # Non-negative value
+    x4 = pulp.LpVariable(name="Lettuce Wraps", lowBound=0)  # Non-negative value
+    x5 = pulp.LpVariable(name="Quinoa Salad", lowBound=0)  # Non-negative value
+
+    #objective function to be minimized because you want to find optimal cost
+    lp2 += 3.22 * x1 + 1.02 * x2 + 14.62 * x3 + 5.42 * x4 + 5.40 * x5
+
+    #constraints provided by FDA nutritional information
+    lp2 += 274.7 * x1 + 381 * x2 + 506 * x3 + 1225.9 * x4 + 1257 * x5 <=5000 #Sodium
+    lp2 += 269 * x1 + 85 * x2 + 593 * x3 + 505 * x4 + 829 * x5 >=2000 #Calories
+    lp2 += 15 * x1 + 9 * x2 + 35 * x3 + 22.8 * x4 + 28 * x5 >=50 #Protein
+    lp2 += 0 * x1 + 0 * x2 + 16.9 * x3 + 0 * x4 + 0 * x5 >=20 #Vitamin D
+    lp2 += 60 * x1 + 86 * x2 + 59.3 * x3 + 110 * x4 + 387 * x5 >=1300 #Calcium
+    lp2 += 4.68 * x1 + 0.2 * x2 + 2.5 * x3 + 4.1 * x4 + 12 * x5 >=18 #Iron
+    lp2 += 1269 * x1 + 116 * x2 + 648.6 * x3 + 799 * x4 + 2345 * x5 >=4700 #Potassium
+    #adding two more constraints
+    lp2 += 23.4 * x1 + 9 * x2 + 5.1 * x3 + 0 * x4 + 55 * x5 >=90 #Vitamin C
+    lp2 += 261 * x1 + 414 * x2 + 368.1 * x3 + 324 * x4 + 17811 * x5 >=900 #Vitamin A
+
+    #solve the lp
+    solution = lp2.solve()
+    print("Solution",solution)
+    #1: optimal, 2: not solved, 3:infeasible, 4:unbounded, 5:not defined
+          
+    for var in lp2.variables():
+        print(var, "=", pulp.value(var))
+          
+    print("OPT =", pulp.value(lp2.objective))
+
+    Welcome to the CBC MILP Solver 
+    Version: 2.10.3 
+    Build Date: Dec 15 2019 
+
+    command line - /home/daf03834-2cd7-40ad-bc31-d3b51e4b5c9f/.local/lib/python3.9/site-packages/pulp/solverdir/cbc/linux/64/cbc /tmp/6c005edf5bbd431185e8ad5cd7ee9740-pulp.mps timeMode elapsed branch printingOptions all solution /tmp/6c005edf5bbd431185e8ad5cd7ee9740-pulp.sol (default strategy 1)
+    At line 2 NAME          MODEL
+    At line 3 ROWS
+    At line 14 COLUMNS
+    At line 60 RHS
+    At line 70 BOUNDS
+    At line 71 ENDATA
+    Problem MODEL has 9 rows, 5 columns and 40 elements
+    Coin0008I MODEL read with 0 errors
+    Option for timeMode changed from cpu to elapsed
+    Presolve 8 (-1) rows, 5 (0) columns and 39 (-1) elements
+    0  Obj 17.301775 Primal inf 26.258789 (7)
+    3  Obj 33.74213
+    Optimal - objective value 33.74213
+    After Postsolve, objective 33.74213, infeasibilities - dual 0 (0), primal 0 (0)
+    Optimal objective 33.7421295 - 3 iterations time 0.002, Presolve 0.00
+    Option for printingOptions changed from normal to all
+    Total time (CPU seconds):       0.00   (Wallclock seconds):       0.01
+
+    Solution 1
+    Egg_White_Bites = 3.9997744
+    Lentil_Soup = 0.0
+    Lettuce_Wraps = 0.0
+    Quinoa_Salad = 2.2889971
+    Salmon = 1.183432
+    OPT = 33.742130068
+
+    #That didn't change the answer so adding less than 50gs of sugar
+    lp2 = pulp.LpProblem("MyDietResearch", pulp.LpMinimize)
+    #setting up lp problem
+
+    # My 5 food items described as variables and non negative
+    x1 = pulp.LpVariable(name="Lentil Soup", lowBound=0)  # Non-negative value
+    x2 = pulp.LpVariable(name="Egg White Bites", lowBound=0)  # Non-negative value
+    x3 = pulp.LpVariable(name="Salmon", lowBound=0)  # Non-negative value
+    x4 = pulp.LpVariable(name="Lettuce Wraps", lowBound=0)  # Non-negative value
+    x5 = pulp.LpVariable(name="Quinoa Salad", lowBound=0)  # Non-negative value
+
+    #objective function to be minimized because you want to find optimal cost
+    lp2 += 3.22 * x1 + 1.02 * x2 + 14.62 * x3 + 5.42 * x4 + 5.40 * x5
+
+    #constraints provided by FDA nutritional information
+    lp2 += 274.7 * x1 + 381 * x2 + 506 * x3 + 1225.9 * x4 + 1257 * x5 <=5000 #Sodium
+    lp2 += 269 * x1 + 85 * x2 + 593 * x3 + 505 * x4 + 829 * x5 >=2000 #Calories
+    lp2 += 15 * x1 + 9 * x2 + 35 * x3 + 22.8 * x4 + 28 * x5 >=50 #Protein
+    lp2 += 0 * x1 + 0 * x2 + 16.9 * x3 + 0 * x4 + 0 * x5 >=20 #Vitamin D
+    lp2 += 60 * x1 + 86 * x2 + 59.3 * x3 + 110 * x4 + 387 * x5 >=1300 #Calcium
+    lp2 += 4.68 * x1 + 0.2 * x2 + 2.5 * x3 + 4.1 * x4 + 12 * x5 >=18 #Iron
+    lp2 += 1269 * x1 + 116 * x2 + 648.6 * x3 + 799 * x4 + 2345 * x5 >=4700 #Potassium
+    #adding two more constraints
+    lp2 += 23.4 * x1 + 9 * x2 + 5.1 * x3 + 0 * x4 + 55 * x5 >=90 #Vitamin C
+    lp2 += 261 * x1 + 414 * x2 + 368.1 * x3 + 324 * x4 + 17811 * x5 >=900 #Vitamin A
+
+    #that didn't change the answer so adding less than 50gs of sugar
+    lp2 += 6.8 * x1 + 1 * x2 + 1.5 * x3 + 11.8 * x4 + 11 * x5 <=50 #sugar
+    #solve the lp
+    solution = lp2.solve()
+    print("Solution",solution)
+    #1: optimal, 2: not solved, 3:infeasible, 4:unbounded, 5:not defined
+          
+    for var in lp2.variables():
+        print(var, "=", pulp.value(var))
+          
+    print("OPT =", pulp.value(lp2.objective))
+
+    Welcome to the CBC MILP Solver 
+    Version: 2.10.3 
+    Build Date: Dec 15 2019 
+
+    command line - /home/daf03834-2cd7-40ad-bc31-d3b51e4b5c9f/.local/lib/python3.9/site-packages/pulp/solverdir/cbc/linux/64/cbc /tmp/573c542f53ba497284445c6fdcaf8cff-pulp.mps timeMode elapsed branch printingOptions all solution /tmp/573c542f53ba497284445c6fdcaf8cff-pulp.sol (default strategy 1)
+    At line 2 NAME          MODEL
+    At line 3 ROWS
+    At line 15 COLUMNS
+    At line 66 RHS
+    At line 77 BOUNDS
+    At line 78 ENDATA
+    Problem MODEL has 10 rows, 5 columns and 45 elements
+    Coin0008I MODEL read with 0 errors
+    Option for timeMode changed from cpu to elapsed
+    Presolve 9 (-1) rows, 5 (0) columns and 44 (-1) elements
+    0  Obj 17.301775 Primal inf 26.258789 (7)
+    3  Obj 33.74213
+    Optimal - objective value 33.74213
+    After Postsolve, objective 33.74213, infeasibilities - dual 0 (0), primal 0 (0)
+    Optimal objective 33.7421295 - 3 iterations time 0.002, Presolve 0.00
+    Option for printingOptions changed from normal to all
+    Total time (CPU seconds):       0.00   (Wallclock seconds):       0.01
+
+    Solution 1
+    Egg_White_Bites = 3.9997744
+    Lentil_Soup = 0.0
+    Lettuce_Wraps = 0.0
+    Quinoa_Salad = 2.2889971
+    Salmon = 1.183432
+    OPT = 33.742130068
