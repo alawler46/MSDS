@@ -1,0 +1,8 @@
+﻿,Simulation Results,,
+(in seconds),Shapefile,GeoJSON,GeoPackage
+Attribute Change,0.047073736,0.043591049,0.202523963
+Buffer,0.376397559,0.383662682,0.380172454
+Simplify,0.000743713617,0.000720311,0.000724953
+Spatial Index,0.000933574,0.000950336,0.000924205
+,,,
+,,,
